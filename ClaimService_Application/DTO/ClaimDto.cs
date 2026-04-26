@@ -12,7 +12,7 @@ namespace ClaimService_Application.DTO
         public int PolicyId { get; set; }
 
         public decimal ClaimAmount { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public string Description { get; set; }
 
     }

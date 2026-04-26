@@ -15,7 +15,7 @@ namespace ClaimService_Domain.Models
 
         public decimal ClaimAmount { get; set; }
 
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public string Description { get; set; }
 
         //Audit Feilds 

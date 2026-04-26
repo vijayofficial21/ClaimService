@@ -15,5 +15,13 @@ namespace ClaimService_Application.Interface
         Task<bool> DeleteClaims(int id);
         Task<IEnumerable<ClaimDto>> GetAllClaims();
         Task<ClaimDto> GetClaimsById(int id);
+
+
+        Task<IEnumerable<ClaimDto>> GetByPolicyIdAsync(int PolicyId);
+        Task<bool> ApproveClaimAsync(int id);
+
+        Task<bool> RejectClaimAsync(int id);
+
+
     }
 }

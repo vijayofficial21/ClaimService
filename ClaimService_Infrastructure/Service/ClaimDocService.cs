@@ -28,13 +28,43 @@ namespace ClaimService_Infrastructure.Service
             var claimExists = await db.Claims.AnyAsync(x => x.ClaimId == dto.ClaimId);
             if (!claimExists)
             {
-                throw new Exception("Invalid ClaimId")
+                throw new Exception("Invalid ClaimId");
+
             }
+
+            var docs = mapper.Map<ClaimDoc>(dto);
+
+            await db.ClaimDocs.AddAsync(docs);
+            await db.SaveChangesAsync();
+
+            return mapper.Map<ClaimDocDto>(docs);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async  Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var docs = await db.ClaimDocs.FindAsync(id);
+            if(docs == null)
+            {
+                return false;
+            }
+            db.ClaimDocs.Remove(docs);
+            await db.SaveChangesAsync();
+            return true; 
+
+
+        }
+        public async Task<bool> UpdateAsync(int id, UpdateClaimDocDto dto)
+        {
+            var docs = await db.ClaimDocs.FindAsync(id);
+            if (docs == null)
+            {
+                return false;
+            }
+            mapper.Map(dto, docs);
+            await db.SaveChangesAsync();
+            return true;
+
+
         }
 
         public async  Task<IEnumerable<ClaimDocDto>> GetAllAsync()
@@ -50,9 +80,6 @@ namespace ClaimService_Infrastructure.Service
 
         }
 
-        public Task<bool> UpdateAsync(int id, UpdateClaimDocDto dto)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

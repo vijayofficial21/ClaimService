@@ -20,6 +20,8 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 
 builder.Services.AddScoped<IClaimService, ClaimService>();
+builder.Services.AddScoped<IClaimDocService, ClaimDocService>();
+
 builder.Services.AddAutoMapper(typeof(DtoMapping));
 
 var app = builder.Build();

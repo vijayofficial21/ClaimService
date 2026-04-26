@@ -29,7 +29,7 @@ namespace ClaimService_Infrastructure.Service
 
             claim.CreatedBy = "Admin";
             claim.CreatedAt = DateTime.UtcNow;
-            claim.Status = false;
+            claim.Status = "Pending";
 
             db.Claims.Add(claim);
             await db.SaveChangesAsync();
@@ -77,6 +77,49 @@ namespace ClaimService_Infrastructure.Service
             return claim == null ? null : mapper.Map<ClaimDto>(claim);
         }
 
-      
+        public async Task<IEnumerable<ClaimDto>> GetByPolicyIdAsync(int PolicyId)
+        {
+            var claims = await db.Claims
+                 .Where(x => x.PolicyId == PolicyId)
+                 .ToListAsync();
+            return mapper.Map<IEnumerable<ClaimDto>>(claims);
+
+        }
+
+
+        public async Task<bool> ApproveClaimAsync(int id)
+        {
+            var claim = await db.Claims.FindAsync(id);
+
+            if(claim == null)
+            {
+                return false;
+
+            }
+            claim.Status = "Approved";
+            claim.UpdatedAt = DateTime.UtcNow;
+
+            await db.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<bool> RejectClaimAsync(int id)
+        {
+            var claim = await db.Claims.FindAsync(id);
+
+            if (claim == null)
+            {
+                return false;
+            }
+               
+
+            claim.Status = "Rejected";
+            claim.UpdatedAt = DateTime.UtcNow;
+
+            await db.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

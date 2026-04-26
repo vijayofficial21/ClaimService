@@ -9,7 +9,8 @@ namespace ClaimService_Application.DTO
     public class UpdateClaimDto
     {
         public decimal ClaimAmount { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public string Description { get; set; }
     }
 }
+

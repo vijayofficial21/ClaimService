@@ -20,7 +20,7 @@ namespace service.Controllers
         public async Task<IActionResult> Create(CreateClaimDto dto)
         {
             var result = await service.CreateClaims(dto);
-            return CreatedAtAction(nameof(Get), new { id = result.ClaimId }, result);
+            return CreatedAtAction(nameof(GetById), new { id = result.ClaimId }, result);
         }
 
         [HttpPut("{id}")]
@@ -42,7 +42,7 @@ namespace service.Controllers
             {
                 return NotFound();
             }
-            
+
             return NoContent();
         }
 
@@ -54,12 +54,53 @@ namespace service.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var claim = await service.GetClaimsById(id);
             if (claim == null) return NotFound();
 
             return Ok(claim);
         }
+
+
+
+
+        [HttpGet("{PolicyId}")]
+        public async Task<IActionResult> GetByPolicy(int PolicyId)
+        {
+            var claims = await service.GetByPolicyIdAsync(PolicyId);
+            return Ok(claims);
+        }
+
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> ApproveClaim(int id)
+        {
+            var result = await service.ApproveClaimAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> RejectClaim(int id)
+        {
+            var result = await service.RejectClaimAsync(id);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+
+
+
     }
 }
