@@ -1,4 +1,5 @@
 ﻿using ClaimService_Application.DTO;
+using ClaimService_Application.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,11 @@ namespace ClaimService_Application.Interface
 
         Task<bool> DeleteAsync(int id);
 
-        Task<IEnumerable<ClaimDocDto>> GetAllAsync();
+        Task<PagedResponse<ClaimDocDto>> GetAllAsync(int pageNumber, int pageSize);
 
         Task<ClaimDocDto> GetByIdAsync(int id);
+
+        Task<ClaimDocDto> UploadAsync(UploadClaimDocDto dto); 
 
     }
 }

@@ -23,7 +23,7 @@ namespace service.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.ClaimId }, result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, UpdateClaimDto dto)
         {
             var updated = await service.UpdateClaims(id, dto);
@@ -48,9 +48,9 @@ namespace service.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 5)
         {
-            return Ok(await service.GetAllClaims());
+            return Ok(await service.GetAllClaims(pageNumber,pageSize));
         }
 
         [HttpGet("{id}")]
@@ -65,7 +65,7 @@ namespace service.Controllers
 
 
 
-        [HttpGet("{PolicyId}")]
+        [HttpGet("Policy/{PolicyId}")]
         public async Task<IActionResult> GetByPolicy(int PolicyId)
         {
             var claims = await service.GetByPolicyIdAsync(PolicyId);
@@ -73,7 +73,7 @@ namespace service.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("Approve/{id}")]
 
         public async Task<IActionResult> ApproveClaim(int id)
         {
@@ -85,7 +85,7 @@ namespace service.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Reject/{id}")]
 
         public async Task<IActionResult> RejectClaim(int id)
         {
@@ -99,7 +99,11 @@ namespace service.Controllers
             return NoContent();
         }
 
-
+        //[HttpGet("test-error")]
+        //public IActionResult TestError()
+        //{
+        //    throw new Exception("Test error");
+        //}
 
 
     }

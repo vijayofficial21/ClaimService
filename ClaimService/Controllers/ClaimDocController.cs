@@ -16,9 +16,9 @@ namespace service.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 5)
         {
-            return Ok(await service.GetAllAsync());
+            return Ok(await service.GetAllAsync(pageNumber,pageSize));
         }
 
         [HttpGet("{id}")]
@@ -66,6 +66,13 @@ namespace service.Controllers
             }
             return NoContent();
 
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload([FromForm] UploadClaimDocDto dto)
+        {
+            var result = await service.UploadAsync(dto);
+            return Ok(result);
         }
 
 

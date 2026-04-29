@@ -1,4 +1,5 @@
 ﻿using ClaimService_Application.DTO;
+using ClaimService_Application.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace ClaimService_Application.Interface
         Task<ClaimDto> CreateClaims(CreateClaimDto dto);
         Task<bool> UpdateClaims(int id, UpdateClaimDto dto);
         Task<bool> DeleteClaims(int id);
-        Task<IEnumerable<ClaimDto>> GetAllClaims();
+        Task<PagedResponse<ClaimDto>> GetAllClaims(int pageNumber, int pageSize);
         Task<ClaimDto> GetClaimsById(int id);
 
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClaimService_Application.DTO;
 using ClaimService_Application.Interface;
+using ClaimService_Application.Wrapper;
 using ClaimService_Domain.Models;
 using ClaimService_Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ClaimService_Infrastructure.Service
 {
@@ -65,10 +67,32 @@ namespace ClaimService_Infrastructure.Service
             return true;
         }
 
-        public async Task<IEnumerable<ClaimDto>> GetAllClaims()
+        public async Task<PagedResponse<ClaimDto>> GetAllClaims(int pageNumber , int pageSize)
         {
-            var claims = await db.Claims.ToListAsync();
-            return mapper.Map<IEnumerable<ClaimDto>>(claims);
+
+            var TotalRecords = await db.Claims.CountAsync();
+
+
+            var claims = await db.Claims
+                .Skip((pageNumber-1)* pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            if (pageNumber <= 0)
+            {
+                pageNumber = 1;
+            }
+
+            if (pageSize <= 0)
+            {
+                pageSize = 5;
+            }
+
+            var data =  mapper.Map<List<ClaimDto>>(claims);
+
+            return PagedResponse<ClaimDto>.Create(data, pageNumber, pageSize, TotalRecords);
+
+            
         }
 
         public async Task<ClaimDto> GetClaimsById(int id)
@@ -121,5 +145,7 @@ namespace ClaimService_Infrastructure.Service
 
             return true;
         }
+
+       
     }
 }
