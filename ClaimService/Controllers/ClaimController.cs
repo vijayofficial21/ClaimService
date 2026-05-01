@@ -1,11 +1,13 @@
-﻿using ClaimService_Application.DTO;
+﻿using ClaimService_Application.ApiResponse;
+using ClaimService_Application.DTO;
 using ClaimService_Application.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace service.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("claim")]
     [ApiController]
     public class ClaimController : ControllerBase
     {
@@ -20,7 +22,10 @@ namespace service.Controllers
         public async Task<IActionResult> Create(CreateClaimDto dto)
         {
             var result = await service.CreateClaims(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.ClaimId }, result);
+            var data =  CreatedAtAction(nameof(GetById), new { id = result.ClaimId }, result);
+
+            return ApiResponse<CreateClaimDto>.SuccessResponse(data, "create claim");
+
         }
 
         [HttpPut("Update/{id}")]

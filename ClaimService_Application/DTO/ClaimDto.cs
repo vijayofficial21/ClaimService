@@ -15,5 +15,7 @@ namespace ClaimService_Application.DTO
         public string Status { get; set; }
         public string Description { get; set; }
 
+        public PolicyDTO Policy { get; set; }
+
     }
 }

@@ -1,3 +1,4 @@
+using ClaimService_Application.DTO;
 using ClaimService_Application.Interface;
 using ClaimService_Application.Mapping;
 using ClaimService_Infrastructure.Data;
@@ -33,6 +34,12 @@ builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IClaimDocService, ClaimDocService>();
 
 builder.Services.AddAutoMapper(typeof(DtoMapping));
+
+builder.Services.AddHttpClient<PolicyClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["PolicyAddress"] ?? "http://localhost:5171");
+});
+
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()

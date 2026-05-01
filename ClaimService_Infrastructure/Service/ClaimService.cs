@@ -19,10 +19,13 @@ namespace ClaimService_Infrastructure.Service
         public readonly ApplicationDbContext db;
 
         public readonly IMapper mapper;
-        public ClaimService(ApplicationDbContext db, IMapper mapper)
+
+        public readonly PolicyClient client;
+        public ClaimService(ApplicationDbContext db, IMapper mapper , PolicyClient client)
         {
             this.db = db;
             this.mapper = mapper;
+            this.client = client;
 
         }
         public async Task<ClaimDto> CreateClaims(CreateClaimDto dto)
@@ -33,7 +36,7 @@ namespace ClaimService_Infrastructure.Service
             claim.CreatedAt = DateTime.UtcNow;
             claim.Status = "Pending";
 
-            db.Claims.Add(claim);
+            await db.Claims.AddAsync(claim);
             await db.SaveChangesAsync();
 
             return mapper.Map<ClaimDto>(claim);
@@ -95,10 +98,42 @@ namespace ClaimService_Infrastructure.Service
             
         }
 
+        //public async Task<ClaimDto> GetClaimsById(int id)
+        //{
+        //    var claim = await db.Claims.FindAsync(id);
+        //    if (claim == null)
+        //    {
+        //        return null;
+        //    }
+        //    PolicyDTO dto = await client.GetbyId(claim.PolicyId);
+        //    var res = mapper.Map<ClaimDto>(claim);
+
+        //    return res;
+
+        //    //return claim == null ? null : mapper.Map<ClaimDto>(claim);
+        //}
+
+
+
+
         public async Task<ClaimDto> GetClaimsById(int id)
         {
             var claim = await db.Claims.FindAsync(id);
-            return claim == null ? null : mapper.Map<ClaimDto>(claim);
+            if (claim == null) return null;
+
+            var res = mapper.Map<ClaimDto>(claim);
+
+            try
+            {
+                var dto = await client.GetbyId(claim.PolicyId);
+                res.Policy = dto;   //attach full policy object
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Policy service error: {ex.Message}");
+            }
+
+            return res;
         }
 
         public async Task<IEnumerable<ClaimDto>> GetByPolicyIdAsync(int PolicyId)

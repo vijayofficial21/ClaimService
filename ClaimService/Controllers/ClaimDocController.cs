@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace service.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("claimdoc")]
     [ApiController]
     public class ClaimDocController : ControllerBase
     {
